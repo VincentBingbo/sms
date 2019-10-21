@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vincent.mapper.UserMapper">
+    <select id="queryUserByUserId" resultType="com.vincent.core.bean.UserInfo">
+        select userId, userName, userPwd, userPassword, salt, status, userGender, userPhone, isLock, createTime, updateTime
+        from userInfo
+        where userId = #{userId}
+    </select>
+
+    <select id="queryPermission" resultType="com.vincent.core.bean.PermissionInfo">
+        select pi.permissionCode
+        from permissionInfo pi
+        where pi.permissionId in (
+            select substring_index(substring_index(rp.permission_Id, ',', hc.help_topic_id + 1), ',', -1) as id
+            from role_permission rp,
+            mysql.help_topic hc,
+            userInfo ui
+            where hc.help_topic_id <![CDATA[ <]]> (length(rp.permission_id) - length(replace(rp.permission_id, ',', '')) + 1)
+            and ui.roleId = rp.role_id
+            and ui.userId = #{userId}
+        )
+    </select>
+
+    <select id="queryRelam" resultType="java.lang.String">
+        SELECT
+            ri.roleName
+        FROM
+            roleInfo ri,
+            userInfo ui
+        WHERE
+            ui.roleId = ri.roleId
+            AND ui.userId = #{userId}
+    </select>
+
+    <insert id="addUser" parameterType="com.vincent.core.bean.UserInfo">
+        INSERT into userInfo(
+            userId,
+            userName,
+            userPwd,
+            userPassword,
+            userGender,
+            userPhone,
+            status,
+            salt,
+            isLock,
+            createTime,
+            updateTime,
+            roleId
+        ) VALUES (
+            #{userId},
+            #{userName},
+            #{userPwd},
+            #{userPassword},
+            #{userGender},
+            #{userPhone},
+            #{status},
+            #{salt},
+            #{isLock},
+            #{createTime},
+            #{updateTime},
+            #{roleId}
+        )
+    </insert>
+
+</mapper>
