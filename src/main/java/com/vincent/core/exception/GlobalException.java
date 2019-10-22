@@ -16,7 +16,7 @@ public class GlobalException {
      */
     @ExceptionHandler(AuthorizationException.class)
     public String authorizationException(AuthorizationException e) {
-        log.error(e.getMessage(), e);
+//        log.error(e.getMessage(), e);
         return "unauthorized";
     }
 }

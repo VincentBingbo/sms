@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Component
 public class ShiroConfig {
@@ -44,7 +45,8 @@ public class ShiroConfig {
                 if (userInfo == null) return null;
                 String roleName = userService.queryRelam(userInfo.getUserId());
                 authorizationInfo.addRole(roleName);
-                authorizationInfo.setStringPermissions(userService.queryPermission(userInfo.getUserId()));
+                Set<String> permissionSet = userService.queryPermission(userInfo.getUserId());
+                authorizationInfo.setStringPermissions(permissionSet);
                 return authorizationInfo;
             }
 
@@ -89,6 +91,7 @@ public class ShiroConfig {
         filterMap.put("/login", "anon");
         filterMap.put("/register", "anon");
         filterMap.put("/toLogin", "anon");
+        filterMap.put("/images/**", "anon");
         filterMap.put("/fonts/**", "anon");
         filterMap.put("/css/**", "anon");
         filterMap.put("/js/**", "anon");

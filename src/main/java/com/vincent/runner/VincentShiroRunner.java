@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.util.StringUtils;
+import org.springframework.util.StringUtils;
 
 import java.net.InetAddress;
 
@@ -23,6 +23,6 @@ public class VincentShiroRunner implements ApplicationRunner {
             url += contentPath;
         }
         url += "/login";
-        Runtime.getRuntime().exec("cmd /c start " + url);
+//        Runtime.getRuntime().exec("cmd /c start " + url);
     }
 }
