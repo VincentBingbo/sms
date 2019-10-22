@@ -3,10 +3,12 @@ package com.vincent.runner;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
 import java.net.InetAddress;
 
+@Component
 public class VincentShiroRunner implements ApplicationRunner {
     @Value("${server.port}")
     private int port;
@@ -20,7 +22,7 @@ public class VincentShiroRunner implements ApplicationRunner {
         if (!StringUtils.isEmpty(contentPath)) {
             url += contentPath;
         }
-        url += "login";
+        url += "/login";
         Runtime.getRuntime().exec("cmd /c start " + url);
     }
 }

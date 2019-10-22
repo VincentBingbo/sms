@@ -1,10 +1,11 @@
 package com.vincent.mapper;
 
 import com.vincent.core.bean.UserInfo;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Set;
 
+@Mapper
 public interface UserMapper {
     UserInfo queryUserByUserId(String userId);
 

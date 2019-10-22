@@ -14,7 +14,7 @@ public class LoginController {
 
     @RequestMapping("/login")
     public String login() {
-        return "login.ftl";
+        return "/login";
     }
 
     @RequestMapping("/register")
@@ -30,18 +30,18 @@ public class LoginController {
             subject.login(token);
         } catch (AuthenticationException e) {
             e.printStackTrace();
-            return "error";
+            return "/error";
         }
 
         Session session = subject.getSession();
         session.setAttribute("userId", userId);
-        return "index";
+        return "/index";
     }
 
     @RequiresRoles(value = "admin")
     @RequestMapping("/admin")
     public String admin() {
-        return "admin";
+        return "/admin";
     }
 
     @RequiresRoles(value = "user")
