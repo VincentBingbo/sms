@@ -1,70 +1,69 @@
-package com.vincent.voice;
+package com.vincent.core.config;
 
 import com.baidu.aip.speech.AipSpeech;
 import com.baidu.aip.speech.TtsResponse;
 import com.baidu.aip.util.Util;
 import javazoom.jl.player.Player;
 import org.json.JSONObject;
- 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
- 
-/**
- * 将文本上传至百度服务器，返回语音文件，如output.mp3，并播放MP3文件
- * SDK下载地址：https://ai.baidu.com/file/EDF42F3DB3B4489FA1A88FD1E2BC5D74
- */
-public class VoiceCompose {
-    // 设置APPID/AK/SK
-    // 百度AI开发平台的控制台中创建一个语音应用即可获得
-    private static final String APP_ID = "11404467";
-    private static final String API_KEY = "quY2ax3X7NwqB7WyZoc9xWvR";
-    private static final String SECRET_KEY = "TEMatGKh35RPMhjMGj3ptb6PsEWsl6oV";
- 
-    private static final AipSpeech aipSpeech = getAipSpeech();
- 
-    private static String filename = "src/main/resources/mp3/output.mp3";
- 
+
+@Component
+public class VoiceConfig {
+
+    @Value("${voice.baidu.app_id}")
+    private String APP_ID;
+    @Value("${voice.baidu.app_key}")
+    private String API_KEY;
+    @Value("${voice.baidu.secret_key}")
+    private String SECRET_KEY;
+
+    public static final String fileName = "src/main/resources/mp3/output.mp3";
+
     private static Player player;
- 
-    public static void main(String[] args) {
-        VoiceCompose voiceCompose = new VoiceCompose();
-        String text = "好的！主人，已经帮您执行啦！";
-        if(!voiceCompose.getMP3ByText(text)){
-            System.out.println("转换失败");
-        }else{
-            voiceCompose.playMP3();
-        }
-    }
- 
-    private static AipSpeech getAipSpeech(){
+
+    @Bean(value = "aipSpeech")
+    public AipSpeech getAipSpeech() {
         // 初始化一个AipSpeech
         AipSpeech aipSpeech = new AipSpeech(APP_ID, API_KEY, SECRET_KEY);
- 
+
         // 可选：设置网络连接参数
         aipSpeech.setConnectionTimeoutInMillis(2000);
         aipSpeech.setSocketTimeoutInMillis(60000);
- 
+
         // 可选：设置代理服务器地址, http和socket二选一，或者均不设置
         //aipSpeech.setHttpProxy("proxy_host", proxy_port);  // 设置http代理
         //aipSpeech.setSocketProxy("proxy_host", proxy_port);  // 设置socket代理
- 
+
         // 可选：设置log4j日志输出格式，若不设置，则使用默认配置
         // 也可以直接通过jvm启动参数设置此环境变量
         // System.setProperty("aip.log4j.conf", "path/to/your/log4j.properties");
- 
+
         return aipSpeech;
     }
- 
+
+    public void speak(String text) {
+//        String text = "好的，已经帮您执行！";
+        if (!getMP3ByText(text)) {
+            System.out.println("转换失败");
+        } else {
+            playMP3();
+        }
+    }
+
     /**
      * 将文字转为MP3文件，需联网，依靠百度语音合成
+     *
      * @param text
      * @return 是否成功
      */
-    public boolean getMP3ByText(String text){
-        player = null;
- 
+    private boolean getMP3ByText(String text) {
         // 设置可选参数
         HashMap<String, Object> options = new HashMap<>();
         // 语速，取值0-9，默认为5中语速
@@ -75,7 +74,8 @@ public class VoiceCompose {
         options.put("vol", "5");
         // 发音人选择, 0为女声，1为男声，3为情感合成-度逍遥，4为情感合成-度丫丫，默认为普通女
         options.put("per", "4");
- 
+
+        AipSpeech aipSpeech = getAipSpeech();
         // 调用接口
         // text 合成的文本，使用UTF-8编码。小于2048个中文字或者英文数字。（文本在百度服务器内转换为GBK后，长度必须小于4096字节）
         // lang 固定值zh。语言选择,目前只有中英文混合模式，填写固定值zh
@@ -89,23 +89,23 @@ public class VoiceCompose {
         JSONObject res1 = res.getResult();
         if (data != null) {
             try {
-                Util.writeBytesToFileSystem(data, filename);
+                Util.writeBytesToFileSystem(data, fileName);
             } catch (IOException e) {
                 e.printStackTrace();
                 return false;
             }
         }
- 
+
         if (res1 != null) {
             System.out.println(res1.toString(2));
         }
- 
+
         return true;
     }
- 
-    public void playMP3(){
+
+    private void playMP3() {
         try {
-            BufferedInputStream buffer = new BufferedInputStream(new FileInputStream(filename));
+            BufferedInputStream buffer = new BufferedInputStream(new FileInputStream(fileName));
             // 需导入javazoom.jl.player.Player，下载地址http://www.javazoom.net/javalayer/sources/jlayer1.0.1.zip
             player = new Player(buffer);
             player.play();
@@ -113,14 +113,14 @@ public class VoiceCompose {
             System.out.println(e);
         }
     }
- 
-    public String playerStatus(){
-        if(player == null){
-            return "null";
-        }else if(player.isComplete()){
-            return "played";
-        }else{
-            return "playing";
-        }
-    }
+
+//    public String playerStatus(){
+//        if(player == null){
+//            return "null";
+//        }else if(player.isComplete()){
+//            return "played";
+//        }else{
+//            return "playing";
+//        }
+//    }
 }

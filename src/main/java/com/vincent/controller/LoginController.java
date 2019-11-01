@@ -1,5 +1,6 @@
 package com.vincent.controller;
 
+import com.vincent.core.config.VoiceConfig;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -9,8 +10,13 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.Resource;
+
 @Controller
 public class LoginController {
+
+    @Resource
+    private VoiceConfig voiceConfig;
 
     @RequestMapping("/login")
     public String login() {
@@ -28,11 +34,11 @@ public class LoginController {
         UsernamePasswordToken token = new UsernamePasswordToken(userId, userPwd);
         try {
             subject.login(token);
+            voiceConfig.speak(userId + "，您已经成功登陆！");
         } catch (AuthenticationException e) {
             e.printStackTrace();
             return "/error";
         }
-
         Session session = subject.getSession();
         session.setAttribute("userId", userId);
         return "/index";

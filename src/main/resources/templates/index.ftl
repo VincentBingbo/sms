@@ -14,6 +14,7 @@
     <a href="/user">user</a>
     <span class="glyphicon glyphicon-cloud"></span>
     <span class="glyphicon glyphicon-envelope"></span>
+    <audio src="" controls="controls" width="30px"></audio>
 </div>
 </body>
 </html>

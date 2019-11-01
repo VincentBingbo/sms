@@ -121,6 +121,28 @@
       <version>2.0.1</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.baidu</groupId>
+      <artifactId>api.speech</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/src/main/resources/lib/aip-java-sdk-4.1.1.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>windows</groupId>
+      <artifactId>jl</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/src/main/resources/lib/jl1.0.1.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>com.vincent</groupId>
+      <artifactId>json</artifactId>
+      <version>1.0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/src/main/resources/lib/json-20160810.jar</systemPath>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -128,6 +150,9 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <includeSystemScope>true</includeSystemScope>
+        </configuration>
       </plugin>
     </plugins>
   </build>
