@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         SimpleHash simpleHash = new SimpleHash(ShiroUtil.hashAlgorithmName, userInfo.getUserPwd(), salt, ShiroUtil.hashIterations);
         userInfo.setUserPassword(simpleHash.toString());
 
-        voiceConfig.speak(userInfo.getUserName() + "已经创建完毕！");
+        voiceConfig.speak(userInfo.getUserName() + "已经创建完毕！", userInfo.getUserId());
         return userMapper.addUser(userInfo);
     }
 

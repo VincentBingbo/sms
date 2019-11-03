@@ -24,7 +24,7 @@ public class VoiceConfig {
     @Value("${voice.baidu.secret_key}")
     private String SECRET_KEY;
 
-    public static final String fileName = "src/main/resources/mp3/output.mp3";
+    public static final String filePath = "src/main/resources/static/mp3/";
 
     private static Player player;
 
@@ -48,12 +48,12 @@ public class VoiceConfig {
         return aipSpeech;
     }
 
-    public void speak(String text) {
+    public void speak(String text, String fileName) {
 //        String text = "好的，已经帮您执行！";
-        if (!getMP3ByText(text)) {
+        if (!getMP3ByText(text, filePath + fileName)) {
             System.out.println("转换失败");
         } else {
-            playMP3();
+            playMP3(filePath + fileName);
         }
     }
 
@@ -63,7 +63,7 @@ public class VoiceConfig {
      * @param text
      * @return 是否成功
      */
-    private boolean getMP3ByText(String text) {
+    private boolean getMP3ByText(String text, String fileName) {
         // 设置可选参数
         HashMap<String, Object> options = new HashMap<>();
         // 语速，取值0-9，默认为5中语速
@@ -103,7 +103,7 @@ public class VoiceConfig {
         return true;
     }
 
-    private void playMP3() {
+    private void playMP3(String fileName) {
         try {
             BufferedInputStream buffer = new BufferedInputStream(new FileInputStream(fileName));
             // 需导入javazoom.jl.player.Player，下载地址http://www.javazoom.net/javalayer/sources/jlayer1.0.1.zip
@@ -114,13 +114,13 @@ public class VoiceConfig {
         }
     }
 
-//    public String playerStatus(){
-//        if(player == null){
-//            return "null";
-//        }else if(player.isComplete()){
-//            return "played";
-//        }else{
-//            return "playing";
-//        }
-//    }
+    private String playerStatus(){
+        if(player == null){
+            return "null";
+        }else if(player.isComplete()){
+            return "played";
+        }else{
+            return "playing";
+        }
+    }
 }

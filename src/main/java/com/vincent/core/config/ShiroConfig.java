@@ -94,6 +94,7 @@ public class ShiroConfig {
         filterMap.put("/images/**", "anon");
         filterMap.put("/fonts/**", "anon");
         filterMap.put("/css/**", "anon");
+        filterMap.put("/static/mp3/**", "anon");
         filterMap.put("/js/**", "anon");
         filterMap.put("/**", "anon");
         filterMap.put("/service/**", "authc");

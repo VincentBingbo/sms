@@ -34,7 +34,7 @@ public class LoginController {
         UsernamePasswordToken token = new UsernamePasswordToken(userId, userPwd);
         try {
             subject.login(token);
-            voiceConfig.speak(userId + "，您已经成功登陆！");
+            voiceConfig.speak("已成功登陆！" ,userId);
         } catch (AuthenticationException e) {
             e.printStackTrace();
             return "/error";
