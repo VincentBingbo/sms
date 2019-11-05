@@ -8,7 +8,10 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 
@@ -29,7 +32,11 @@ public class LoginController {
     }
 
     @RequestMapping("/toLogin")
+    @ResponseBody
     public String toLogin(String userId, String userPwd) {
+        if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(userPwd)) {
+            return "账号或者密码不能为空!";
+        }
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(userId, userPwd);
         try {
@@ -41,7 +48,7 @@ public class LoginController {
         }
         Session session = subject.getSession();
         session.setAttribute("userId", userId);
-        return "/index";
+        return userId;
     }
 
     @RequiresRoles(value = "admin")
