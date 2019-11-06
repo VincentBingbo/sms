@@ -1,7 +1,6 @@
 package com.vincent.service.impl;
 
 import com.vincent.core.bean.UserInfo;
-import com.vincent.core.config.VoiceConfig;
 import com.vincent.mapper.UserMapper;
 import com.vincent.service.UserService;
 import com.vincent.util.ShiroUtil;
@@ -21,8 +20,6 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
-    @Resource
-    private VoiceConfig voiceConfig;
 
     @Override
     @Cacheable(key = "#root.methodName + ':' + #userId", cacheNames = "user")
@@ -49,7 +46,6 @@ public class UserServiceImpl implements UserService {
         SimpleHash simpleHash = new SimpleHash(ShiroUtil.hashAlgorithmName, userInfo.getUserPwd(), salt, ShiroUtil.hashIterations);
         userInfo.setUserPassword(simpleHash.toString());
 
-        voiceConfig.speak(userInfo.getUserName() + "已经创建完毕！", userInfo.getUserId());
         return userMapper.addUser(userInfo);
     }
 

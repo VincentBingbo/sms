@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 
 @Controller
 public class LoginController {
@@ -42,7 +43,7 @@ public class LoginController {
         try {
             subject.login(token);
             voiceConfig.speak("已成功登陆！" ,userId);
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException | IOException e) {
             e.printStackTrace();
             return "/error";
         }

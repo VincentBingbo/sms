@@ -23,6 +23,6 @@ public class VincentShiroRunner implements ApplicationRunner {
             url += contentPath;
         }
         url += "/login";
-        Runtime.getRuntime().exec("cmd /c start " + url);
+//        Runtime.getRuntime().exec("cmd /c start " + url);
     }
 }

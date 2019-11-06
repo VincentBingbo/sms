@@ -9,9 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
 
 @Component
@@ -48,12 +47,24 @@ public class VoiceConfig {
         return aipSpeech;
     }
 
-    public void speak(String text, String fileName) {
+    public void speak(String text, String fileName) throws IOException {
 //        String text = "好的，已经帮您执行！";
-        if (!getMP3ByText(text, filePath + fileName)) {
+        if (!getMP3ByText(text, filePath + fileName + ".mp3")) {
             System.out.println("转换失败");
         } else {
-            playMP3(filePath + fileName);
+            File file = new File("F:\\work\\HBuilderProjects\\sms\\mp3\\"
+                    + fileName + ".mp3");
+            file.createNewFile();
+            try (
+                    FileInputStream oriFile = new FileInputStream(filePath + fileName);
+                    FileOutputStream desFile = new FileOutputStream (file);
+                    FileChannel oriChannel = oriFile.getChannel();
+                    FileChannel desChannel = desFile.getChannel()) {
+                oriChannel.transferTo(0, oriChannel.size(), desChannel);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            playMP3(filePath + fileName);
         }
     }
 
@@ -114,12 +125,12 @@ public class VoiceConfig {
         }
     }
 
-    private String playerStatus(){
-        if(player == null){
+    private String playerStatus() {
+        if (player == null) {
             return "null";
-        }else if(player.isComplete()){
+        } else if (player.isComplete()) {
             return "played";
-        }else{
+        } else {
             return "playing";
         }
     }
