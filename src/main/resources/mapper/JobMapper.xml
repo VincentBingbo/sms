@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vincent.mapper.JobMapper">
+    <select id="queryActiveTaskJob" resultType="com.vincent.core.bean.BatchTaskJob">
+        SELECT
+            b.taskId,
+            b.taskName,
+            b.cron,
+            b.shardingTotalCount,
+            b.taskStatus,
+            b.isActive,
+            b.createDate,
+            b.createdBy,
+            b.updateDate,
+            b.updatedBy
+        FROM
+            batchJob b
+        WHERE
+            b.isActive = 'Y'
+    </select>
+
+    <update id="startTask" parameterType="java.lang.String">
+        update batchJob set taskStatus = '01' where taskName = #{taskName}
+    </update>
+
+    <update id="endTask" parameterType="java.lang.String">
+        update batchJob set taskStatus = '00' where taskName = #{taskName}
+    </update>
+</mapper>
